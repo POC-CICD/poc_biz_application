@@ -1,0 +1,36 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: biz-application-blue
+  namespace: default
+  labels:
+    name: biz-application
+    service: biz-application-service
+    version:
+    deploymentType: BLUE
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: biz-application
+      type: frontend
+  template:
+    metadata:
+      labels:
+        name: biz-application
+        type: frontend
+        version:
+        deploymentType: BLUE
+    spec:
+      containers:
+      - name: biz-application
+        image: nisumpk/biz_application
+        ports:
+        - containerPort: 9601
+        env:
+        - name: SERVER_PORT
+          value: -Dserver.port=9601
+        - name: DISCOVERY_SERVER_URL
+          value: "-Deureka.client.serviceUrl.defaultZone=http://discovery-server-service:7001/eureka/"
+        command: ["java"]
+        args: ["$(SERVER_PORT)", "$(DISCOVERY_SERVER_URL)", "-Deureka.instance.preferIpAddress=true", "-Deureka.instance.ipAddress=biz-application-service", "-jar", "/usr/src/biz-application-SNAPSHOT.jar"]
