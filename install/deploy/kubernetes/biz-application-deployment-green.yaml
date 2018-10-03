@@ -19,7 +19,7 @@ spec:
       labels:
         name: biz-application
         type: frontend
-        version:
+        version: "1"
         deploymentType: GREEN
     spec:
       containers:
