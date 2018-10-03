@@ -6,8 +6,6 @@ metadata:
   labels:
     name: biz-application
     service: biz-application-service
-    version:
-    deploymentType: BLUE
 spec:
   replicas: 1
   selector:
