@@ -15,4 +15,4 @@ spec:
 
   selector:
     name: biz-application
-    deploymentType: GREEN
+    deploymentType: BLUE
