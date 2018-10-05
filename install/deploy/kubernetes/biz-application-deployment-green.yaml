@@ -2,7 +2,7 @@ apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: biz-application-green
-  namespace: default
+  namespace: devopspoc
   labels:
     name: biz-application
     service: biz-application-service

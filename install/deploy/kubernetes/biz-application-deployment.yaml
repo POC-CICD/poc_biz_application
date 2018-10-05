@@ -2,7 +2,7 @@ apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: biz-application
-  namespace: default
+  namespace: devopspoc
   labels:
     name: biz-application
     service: biz-application-service
@@ -31,7 +31,7 @@ spec:
         - name: SERVER_PORT
           value: -Dserver.port=9601
         - name: DISCOVERY_SERVER_URL
-          value: "-Deureka.client.serviceUrl.defaultZone=http://discovery-server-service.default.svc.cluster.local:7001/eureka/"
+          value: "-Deureka.client.serviceUrl.defaultZone=http://discovery-server-service.devopspoc.svc.cluster.local:7001/eureka/"
         command: ["java"]
         args: ["$(SERVER_PORT)", "$(DISCOVERY_SERVER_URL)", "-Deureka.instance.preferIpAddress=true", "-Deureka.instance.ipAddress=$(MY_POD_IP)", "-jar", "/usr/src/biz-application-SNAPSHOT.jar"]
 ---
@@ -39,7 +39,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: biz-application-service
-  namespace: default
+  namespace: devopspoc
   labels:
     name: biz-application-service
 spec:
