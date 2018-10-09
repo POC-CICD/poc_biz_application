@@ -8,7 +8,7 @@ pipeline {
 
             /* Do not change below this line! */
             k8configPath = "${WORKSPACE}/install/deploy/kubernetes"
-            configFile = "biz_application-RU-deployment.yaml"
+            configFile = "biz-application-RU-deployment.yaml"
     }
 
     stages {
