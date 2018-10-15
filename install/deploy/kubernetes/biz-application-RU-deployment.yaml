@@ -18,6 +18,11 @@ spec:
     matchLabels:
       name: biz-application
       type: frontend
+  strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxUnavailable: 1
+        maxSurge: 1
   template:
     metadata:
       labels:
