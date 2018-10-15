@@ -13,16 +13,11 @@ metadata:
     service: biz-application-service
 spec:
   replicas: 2
-  minReadySeconds: 15
+  minReadySeconds: 25
   selector:
     matchLabels:
       name: biz-application
       type: frontend
-  strategy:
-        type: RollingUpdate
-        rollingUpdate:
-          maxUnavailable: 1
-          maxSurge: 1
   template:
     metadata:
       labels:
@@ -38,9 +33,11 @@ spec:
         - name: SERVER_PORT
           value: -Dserver.port=9601
         - name: DISCOVERY_SERVER_URL
-          value: "-Deureka.client.serviceUrl.defaultZone=http://discovery-server-service.ru-deployment.svc.cluster.local:7001/eureka/"
+          value: "-Deureka.client.serviceUrl.defaultZone=http://discovery-server-service:7001/eureka/"
         command: ["java"]
-        args: ["$(SERVER_PORT)", "$(DISCOVERY_SERVER_URL)", "-Deureka.instance.preferIpAddress=true", "-Deureka.instance.ipAddress=biz-application-service", "-jar", "/usr/src/biz-application-SNAPSHOT.jar"]        readinessProbe:
+        args: ["$(SERVER_PORT)", "$(DISCOVERY_SERVER_URL)", "-Deureka.instance.preferIpAddress=true", "-Deureka.instance.ipAddress=biz-application-service", "-jar", "/usr/src/biz-application-SNAPSHOT.jar"]
+
+        readinessProbe:
           httpGet:
             path: /
           #  host: 127.0.0.1
