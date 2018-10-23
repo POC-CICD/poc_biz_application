@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: biz-application
+  namespace: canary
+  labels:
+    app: biz-application
+spec:
+  type: NodePort
+  ports:
+  - port: 9601
+    nodePort: 30253
+    targetPort: 9601
+    name: http
+  selector:
+    app: biz-application
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: biz-application-v1
+  namespace: canary
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: biz-application
+        version: biz-application-v1
+    spec:
+      containers:
+      - name: biz-application
+        image: nisumpk/biz_application
+        ports:
+        - containerPort: 9601
+        env:
+        - name: SERVER_PORT
+          value: -Dserver.port=9601
+        - name: DISCOVERY_SERVER_URL
+          value: "-Deureka.client.serviceUrl.defaultZone=http://discovery-server:7001/eureka/"
+        command: ["java"]
+        args: ["$(SERVER_PORT)", "$(DISCOVERY_SERVER_URL)", "-jar", "/usr/src/biz-application-SNAPSHOT.jar"]
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: biz-application-v2
+  namespace: canary
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: biz-application
+        version: biz-application-v2
+    spec:
+      containers:
+      - name: biz-application
+        image: nisumpk/biz_application
+        ports:
+        - containerPort: 9601
+        env:
+        - name: SERVER_PORT
+          value: -Dserver.port=9601
+        - name: DISCOVERY_SERVER_URL
+          value: "-Deureka.client.serviceUrl.defaultZone=http://discovery-server:7001/eureka/"
+        command: ["java"]
+        args: ["$(SERVER_PORT)", "$(DISCOVERY_SERVER_URL)", "-jar", "/usr/src/biz-application-SNAPSHOT.jar"]
