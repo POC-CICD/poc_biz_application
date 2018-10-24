@@ -95,6 +95,14 @@ pipeline {
 
     } // end of stage
 
+    stage('Trigger Blue/Green Deployment') {
+
+      steps {
+        build job: '/DevOpsPOC_BlueGreen_Deploy_BizApp'
+      }
+
+    } // end of stage
+
   } // end of all stages
 
 } // end of pipeline
