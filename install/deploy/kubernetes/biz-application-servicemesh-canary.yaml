@@ -10,12 +10,12 @@ spec:
   - route:
     - destination:
         host: biz-application
-        subset: biz-application-v1
-      weight: 80
+        subset: biz-application-production
+      weight: 90
     - destination:
         host: biz-application
-        subset: biz-application-v2
-      weight: 20
+        subset: biz-application-uat
+      weight: 10
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
@@ -25,9 +25,9 @@ metadata:
 spec:
   host: biz-application
   subsets:
-  - name: biz-application-v1
+  - name: biz-application-production
     labels:
-      version: biz-application-v1
-  - name: biz-application-v2
+      version: biz-application-production
+  - name: biz-application-uat
     labels:
-      version: biz-application-v2
+      version: biz-application-uat
