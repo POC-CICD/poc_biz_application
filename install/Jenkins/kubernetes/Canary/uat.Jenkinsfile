@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 def getNameSpace(nsConfigPath){
 
     def NS=sh (returnStatus: true, script: "grep -i name: " + nsConfigPath + " |head -n1| cut -d':' -f2 &> namespace.txt")
@@ -18,6 +20,13 @@ def deleteK8Config(configPath) {
     sh (returnStatus: true, script: "kubectl delete -f ${configPath}")
 }
 
+node{
+    URL apiUrl = new URL("https://hub.docker.com/v2/repositories/nisumpk/biz_application/tags/?page_size=1024")
+    def json = new JsonSlurper().parseText(apiUrl.text)
+    def tags = json.results.name
+    list = tags.join('\n')
+}
+
 pipeline {
 
     agent { label "k8-master" }
@@ -32,6 +41,9 @@ pipeline {
 
             switchTo  = ''
     }
+    parameters {
+            choice(choices: "${list}", description: 'Available Docker Images', name: 'SelectedImage')
+        }
 
     stages {
 		stage('Clone Repo') {
@@ -64,6 +76,7 @@ pipeline {
 		      script {
                 canaryType = "uat"
               }
+                sh "sed -i \'s/nisumpk\\/biz_application/nisumpk\\/biz_application:${params.SelectedImage}/\' ${env.k8configPath}/${env.appName}-deployment-${env.namespace}-${canaryType}.yaml"
 
 		        deleteK8Config(env.k8configPath + "/" + env.appName + "-deployment-" + env.namespace + "-"+ canaryType + ".yaml")
                 applyK8ConfigWithIstio(env.k8configPath + "/" + env.appName + "-deployment-" + env.namespace + "-" + canaryType + ".yaml")
