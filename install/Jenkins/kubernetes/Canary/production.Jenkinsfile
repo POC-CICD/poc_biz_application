@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 def getNameSpace(nsConfigPath){
 
     def NS=sh (returnStatus: true, script: "grep -i name: " + nsConfigPath + " |head -n1| cut -d':' -f2 &> namespace.txt")
