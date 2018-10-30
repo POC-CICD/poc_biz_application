@@ -57,7 +57,7 @@ pipeline {
 
 		    script {
 
-                def remainingTrafficWeight = 100 - params.percentTrafficOnUAT
+                def remainingTrafficWeight = 100 - params.percentTrafficOnUAT.toInteger()
                 sh (returnStatus: true, script: "sed -i \'s/weight: 10/weight: ${params.percentTrafficOnUAT}/g\' ${env.k8configPath}/${env.appName}-servicemesh-${env.namespace}.yaml")
                 sh (returnStatus: true, script: "sed -i \'s/weight: 90/weight: ${remainingTrafficWeight}/g\' ${env.k8configPath}/${env.appName}-servicemesh-${env.namespace}.yaml")
 
