@@ -53,17 +53,21 @@ pipeline {
 
 		stage('Apply VirtualService') {
 
-		    steps {
+		  steps {
 
-                sh "sed -i \'s/weight: 10/weight: ${params.percentTrafficOnUAT}/g\' ${env.k8configPath}/${env.appName}-servicemesh-${env.namespace}.yaml"
-                sh "sed -i \'s/weight: 90/weight: 100.sub(${params.percentTrafficOnUAT})/g\' ${env.k8configPath}/${env.appName}-servicemesh-${env.namespace}.yaml"
+		    script {
 
-                script {
-                  applyK8Config(env.k8configPath + "/" + env.appName + "-servicemesh-" + env.namespace + ".yaml")
-                }
+                remainingTrafficWeight = 100 - ${params.percentTrafficOnUAT}
+                sh (returnStatus: true, script: "sed -i \'s/weight: 10/weight: ${params.percentTrafficOnUAT}/g\' ${env.k8configPath}/${env.appName}-servicemesh-${env.namespace}.yaml")
+                sh (returnStatus: true, script: "sed -i \'s/weight: 90/weight: ${remainingTrafficWeight}/g\' ${env.k8configPath}/${env.appName}-servicemesh-${env.namespace}.yaml")
+
+                applyK8Config(env.k8configPath + "/" + env.appName + "-servicemesh-" + env.namespace + ".yaml")
+
+            }
 
 
-        	}
+          }
+
         }
 
     }
