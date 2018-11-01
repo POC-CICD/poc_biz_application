@@ -11,11 +11,11 @@ spec:
     - destination:
         host: biz-application
         subset: biz-application-production
-      weight: 90
-    - destination:
-        host: biz-application
-        subset: biz-application-uat
-      weight: 10
+#      weight: 90
+#    - destination:
+#        host: biz-application
+#        subset: biz-application-uat
+#      weight: 10
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
