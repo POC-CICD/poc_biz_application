@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: biz-application
-        image: nisumpk/biz_application
+        image: poccicdsaad/biz_application
         ports:
         - containerPort: 9601
         env:
